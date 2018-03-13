@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'dart:io';
 
 void main() => runApp(new MyApp());
 
@@ -45,21 +47,43 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  String _ipAddress = 'unkonwn';
 
-  void _incrementCounter() {
+  _getIPAddress() async {
+    var url = 'https://httpbin.org/ip';
+    var httpClient = new HttpClient();
+
+    String result;
+    try {
+      var request = await httpClient.getUrl(Uri.parse(url));
+      var response = await request.close();
+      if (response.statusCode == HttpStatus.OK) {
+        var json = await response.transform(UTF8.decoder).join();
+        var data = JSON.decode(json);
+        result = data['origin'];
+      } else {
+        result =
+        'Error getting IP address:\nHttp status ${response.statusCode}';
+      }
+    } catch (exception) {
+      print(exception);
+      result = 'Failed getting IP address';
+    }
+
+    // If the widget was removed from the tree while the message was in flight,
+    // we want to discard the reply rather than calling setState to update our
+    // non-existent appearance.
+    if (!mounted) return;
+
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      this._counter++;
+      _ipAddress = result;
     });
   }
 
+
   @override
   Widget build(BuildContext context) {
+    var spacer = new SizedBox(height: 20.0);
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -93,10 +117,11 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             new Text(
-              'You have pushed the button this many times:',
+              'You IP address is:',
             ),
+            spacer,
             new Text(
-              '$_counter',
+              '$_ipAddress',
               style: Theme
                   .of(context)
                   .textTheme
@@ -106,9 +131,9 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: new FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: new Icon(Icons.add),
+        onPressed: _getIPAddress,
+        tooltip: 'Get IP',
+        child: new Icon(Icons.get_app),
         backgroundColor: Colors.red[400],
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );

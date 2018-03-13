@@ -48,10 +48,12 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   List apiData;
+
   // todo: recurring
 
   _getPricesFromApi() async {
     var url = 'https://api.coinmarketcap.com/v1/ticker/?limit=10';
+    url = 'https://api.myjson.com/bins/13mpv9';
     var httpClient = new HttpClient();
 
 
@@ -83,7 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
     var children = new List<Widget>();
 
     if (apiData == null) {
-      // must not happen!
+      // happens on the first build
       return children;
     }
     for (int i = 0; i < apiData.length; i++) {
@@ -103,7 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     var apiChildren = _makeChildren();
-    var children = <Widget>[
+    var baseChildren = <Widget>[
       new Text(
           'Current Crypto Price',
           style: Theme
@@ -112,8 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
               .display1
       ),
     ].toList();
-
-    children.addAll(apiChildren);
+    List children = baseChildren + apiChildren;
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -128,22 +129,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
       ),
       body: new Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
+
         child: new Column(
-          // Column is also layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug paint" (press "p" in the console where you ran
-          // "flutter run", or select "Toggle Debug Paint" from the Flutter tool
-          // window in IntelliJ) to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
+
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: children,
         ),
@@ -151,7 +139,7 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: new FloatingActionButton(
         onPressed: _getPricesFromApi,
         tooltip: 'Get Price',
-        child: new Icon(Icons.get_app),
+        child: new Icon(Icons.update),
         backgroundColor: Colors.red[400],
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );

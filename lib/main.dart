@@ -47,27 +47,25 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String _ipAddress = 'unkonwn';
+  List apiData;
+  // todo: recurring
 
-  _getIPAddress() async {
-    var url = 'https://httpbin.org/ip';
+  _getPricesFromApi() async {
+    var url = 'https://api.coinmarketcap.com/v1/ticker/?limit=10';
     var httpClient = new HttpClient();
 
-    String result;
+
+    List newApiData;
     try {
       var request = await httpClient.getUrl(Uri.parse(url));
       var response = await request.close();
+      print("called api...");
       if (response.statusCode == HttpStatus.OK) {
         var json = await response.transform(UTF8.decoder).join();
-        var data = JSON.decode(json);
-        result = data['origin'];
-      } else {
-        result =
-        'Error getting IP address:\nHttp status ${response.statusCode}';
+        newApiData = JSON.decode(json);
       }
     } catch (exception) {
       print(exception);
-      result = 'Failed getting IP address';
     }
 
     // If the widget was removed from the tree while the message was in flight,
@@ -76,14 +74,46 @@ class _MyHomePageState extends State<MyHomePage> {
     if (!mounted) return;
 
     setState(() {
-      _ipAddress = result;
+      this.apiData = newApiData;
     });
   }
 
 
+  List<Widget> _makeChildren() {
+    var children = new List<Widget>();
+
+    if (apiData == null) {
+      // must not happen!
+      return children;
+    }
+    for (int i = 0; i < apiData.length; i++) {
+      String price = apiData[i]["name"] + ': \$' + apiData[i]["price_usd"];
+      children.add(
+          new Text(price,
+              style: new TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold
+              )
+          )
+      );
+    }
+    return children;
+  }
+
   @override
   Widget build(BuildContext context) {
-    var spacer = new SizedBox(height: 20.0);
+    var apiChildren = _makeChildren();
+    var children = <Widget>[
+      new Text(
+          'Current Crypto Price',
+          style: Theme
+              .of(context)
+              .textTheme
+              .display1
+      ),
+    ].toList();
+
+    children.addAll(apiChildren);
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -114,25 +144,13 @@ class _MyHomePageState extends State<MyHomePage> {
           // center the children vertically; the main axis here is the vertical
           // axis because Columns are vertical (the cross axis would be
           // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            new Text(
-              'You IP address is:',
-            ),
-            spacer,
-            new Text(
-              '$_ipAddress',
-              style: Theme
-                  .of(context)
-                  .textTheme
-                  .display1,
-            ),
-          ],
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: children,
         ),
       ),
       floatingActionButton: new FloatingActionButton(
-        onPressed: _getIPAddress,
-        tooltip: 'Get IP',
+        onPressed: _getPricesFromApi,
+        tooltip: 'Get Price',
         child: new Icon(Icons.get_app),
         backgroundColor: Colors.red[400],
       ), // This trailing comma makes auto-formatting nicer for build methods.

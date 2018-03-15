@@ -1,6 +1,9 @@
-import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/material.dart';
+
+import 'package:crypto_display/coin.dart';
+import 'package:crypto_display/screens/coinList.dart';
 
 void main() => runApp(new MyApp());
 
@@ -11,18 +14,10 @@ class MyApp extends StatelessWidget {
     return new MaterialApp(
       title: 'Crypto Display',
       theme: new ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or press Run > Flutter Hot Reload in IntelliJ). Notice that the
-        // counter didn't reset back to zero; the application is not restarted.
         primaryColor: Colors.grey[300],
       ),
       home: new MyHomePage(
-          title: 'Crypto Display App', subtitle: 'Latest prices on cryptos'),
+          title: 'Crypto Display'),
     );
   }
 }
@@ -53,7 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
   // todo: recurring
 
   _getPricesFromApi() async {
-    var url = 'https://api.coinmarketcap.com/v1/ticker/?limit=20';
+    var url = 'https://api.coinmarketcap.com/v1/ticker/?limit=12';
 //    url = 'https://api.myjson.com/bins/13mpv9';
     var httpClient = new HttpClient();
 
@@ -69,7 +64,6 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     } catch (exception) {
       Scaffold.of(snackContext).showSnackBar(
-
           new SnackBar(content:
           new Text('Network Error! Check your network connection.'))
       );
@@ -116,6 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
       ),
       body: new Builder(
+//        todo : extract a widget instead of this
           builder: (BuildContext context) {
             snackContext = context;
             return new Center(
@@ -142,42 +137,4 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class Coin {
-  String name;
-  String priceUsd;
 
-  Coin({this.name, this.priceUsd});
-
-  factory Coin.fromJson(Map<String, dynamic> json){
-    return new Coin(
-        name: json["name"],
-        priceUsd: json["price_usd"]
-    );
-  }
-}
-
-class CoinListItem extends StatelessWidget {
-  final Coin coin;
-
-  CoinListItem(Coin coin)
-      : coin = coin;
-
-  @override
-  Widget build(BuildContext context) {
-    void _coinItemTapped() {
-      Scaffold.of(context).showSnackBar(
-          new SnackBar(content: new Text(coin.name))
-      );
-    }
-
-    return
-      new ListTile(
-        leading: new Icon(Icons.local_atm),
-        title: new Text(coin.name),
-        subtitle: new Text("\$${coin.priceUsd}"),
-        onTap: _coinItemTapped,
-      );
-  }
-
-
-}

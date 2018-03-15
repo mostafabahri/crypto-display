@@ -88,14 +88,11 @@ class _MyHomePageState extends State<MyHomePage> {
       // happens on the first build
       return children;
     }
-    for (int i = 0; i < apiData.length; i++) {
-      String price = apiData[i]["name"] + ': \$' + apiData[i]["price_usd"];
+
+    for (var coinJson in apiData) {
       children.add(
-          new Text(price,
-              style: new TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold
-              )
+          new CoinItem(
+              new Coin.fromJson(coinJson)
           )
       );
     }
@@ -142,6 +139,40 @@ class _MyHomePageState extends State<MyHomePage> {
         child: new Icon(Icons.update),
         backgroundColor: Colors.red[400],
       ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+}
+
+class Coin {
+  String name;
+  String priceUsd;
+
+  Coin({this.name, this.priceUsd});
+
+  factory Coin.fromJson(Map<String, dynamic> json){
+    return new Coin(
+        name: json["name"],
+        priceUsd: json["price_usd"]
+    );
+  }
+}
+
+class CoinItem extends StatelessWidget {
+  final Coin coin;
+
+  CoinItem(Coin coin)
+      : coin = coin;
+
+  @override
+  Widget build(BuildContext context) {
+    return new Container(
+        child:
+        new Text('${coin.name} : \$${coin.priceUsd}',
+            style: new TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold
+            )
+        )
     );
   }
 }

@@ -48,12 +48,13 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   List apiData;
+  BuildContext snackContext;
 
   // todo: recurring
 
   _getPricesFromApi() async {
-    var url = 'https://api.coinmarketcap.com/v1/ticker/?limit=10';
-    url = 'https://api.myjson.com/bins/13mpv9';
+    var url = 'https://api.coinmarketcap.com/v1/ticker/?limit=20';
+//    url = 'https://api.myjson.com/bins/13mpv9';
     var httpClient = new HttpClient();
 
 
@@ -67,7 +68,12 @@ class _MyHomePageState extends State<MyHomePage> {
         newApiData = JSON.decode(json);
       }
     } catch (exception) {
-      print(exception);
+      Scaffold.of(snackContext).showSnackBar(
+
+          new SnackBar(content:
+          new Text('Network Error! Check your network connection.'))
+      );
+      return;
     }
 
     // If the widget was removed from the tree while the message was in flight,
@@ -82,7 +88,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
   List<Widget> _makeChildren() {
-
     // happens on the first build
     if (apiData == null) {
       return new List<Widget>();
@@ -90,7 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return apiData.map(
             (var coinJson) =>
-        new CoinItem(
+        new CoinListItem(
             new Coin.fromJson(coinJson)
         )
     ).toList();
@@ -99,22 +104,10 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     var apiChildren = _makeChildren();
-    var baseChildren = <Widget>[
-      new Text(
-          'Current Crypto Price',
-          style: Theme
-              .of(context)
-              .textTheme
-              .display1
-      ),
-    ].toList();
-    List children = baseChildren + apiChildren;
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
+
     return new Scaffold(
       appBar: new AppBar(
         // Here we take the value from the MyHomePage object that was created by
@@ -122,14 +115,23 @@ class _MyHomePageState extends State<MyHomePage> {
         title: new Text(widget.title),
 
       ),
-      body: new Center(
-
-        child: new Column(
-
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: children,
-        ),
-      ),
+      body: new Builder(
+          builder: (BuildContext context) {
+            snackContext = context;
+            return new Center(
+              child:
+              new ListView.builder
+                (
+                padding: const EdgeInsets.all(15.0),
+                itemBuilder: (context, i) {
+                  if (i.isOdd)
+                    return new Divider();
+                  else
+                    return apiChildren[i ~/ 2];
+                },
+              ),
+            );
+          }),
       floatingActionButton: new FloatingActionButton(
         onPressed: _getPricesFromApi,
         tooltip: 'Get Price',
@@ -154,22 +156,28 @@ class Coin {
   }
 }
 
-class CoinItem extends StatelessWidget {
+class CoinListItem extends StatelessWidget {
   final Coin coin;
 
-  CoinItem(Coin coin)
+  CoinListItem(Coin coin)
       : coin = coin;
 
   @override
   Widget build(BuildContext context) {
-    return new Container(
-        child:
-        new Text('${coin.name} : \$${coin.priceUsd}',
-            style: new TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold
-            )
-        )
-    );
+    void _coinItemTapped() {
+      Scaffold.of(context).showSnackBar(
+          new SnackBar(content: new Text(coin.name))
+      );
+    }
+
+    return
+      new ListTile(
+        leading: new Icon(Icons.local_atm),
+        title: new Text(coin.name),
+        subtitle: new Text("\$${coin.priceUsd}"),
+        onTap: _coinItemTapped,
+      );
   }
+
+
 }

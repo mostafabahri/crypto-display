@@ -82,21 +82,18 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
   List<Widget> _makeChildren() {
-    var children = new List<Widget>();
 
+    // happens on the first build
     if (apiData == null) {
-      // happens on the first build
-      return children;
+      return new List<Widget>();
     }
 
-    for (var coinJson in apiData) {
-      children.add(
-          new CoinItem(
-              new Coin.fromJson(coinJson)
-          )
-      );
-    }
-    return children;
+    return apiData.map(
+            (var coinJson) =>
+        new CoinItem(
+            new Coin.fromJson(coinJson)
+        )
+    ).toList();
   }
 
   @override

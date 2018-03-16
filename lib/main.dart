@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
-import 'package:crypto_display/coin.dart';
 import 'package:crypto_display/screens/coinList.dart';
 
 void main() => runApp(new MyApp());
@@ -113,34 +112,4 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-
-class CoinList extends StatelessWidget {
-  final List coinJsonData;
-
-  CoinList({@required this.coinJsonData});
-
-  Widget _rowBuilder(Map<String, dynamic> coinJson) {
-    return new CoinListItem(
-        new Coin.fromJson(coinJson)
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return new Center(
-      child:
-      new ListView.builder
-        (
-        padding: const EdgeInsets.all(15.0),
-        itemBuilder: (context, i) {
-          if (i.isOdd)
-            return new Divider();
-          else
-            return _rowBuilder(this.coinJsonData[i ~/ 2]);
-        },
-      ),
-    );
-  }
-}
-
 

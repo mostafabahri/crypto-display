@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 import 'package:crypto_display/coin.dart';
 import 'package:crypto_display/screens/coinList.dart';
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title, this.subtitle}) : super(key: key);
+  MyHomePage({Key key, @required this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -35,7 +36,6 @@ class MyHomePage extends StatefulWidget {
   // always marked "final".
 
   final String title;
-  final String subtitle;
 
   @override
   _MyHomePageState createState() => new _MyHomePageState();
@@ -43,7 +43,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   List apiData;
-  BuildContext snackContext;
+  BuildContext scaffoldContext;
 
   // todo: recurring
 
@@ -63,10 +63,11 @@ class _MyHomePageState extends State<MyHomePage> {
         newApiData = JSON.decode(json);
       }
     } catch (exception) {
-      Scaffold.of(snackContext).showSnackBar(
+      Scaffold.of(scaffoldContext).showSnackBar(
           new SnackBar(content:
           new Text('Network Error! Check your network connection.'))
       );
+      // so the state does not change
       return;
     }
 
@@ -81,27 +82,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
 
-  List<Widget> _makeChildren() {
-    // happens on the first build
-    if (apiData == null) {
-      return new List<Widget>();
-    }
-
-    return apiData.map(
-            (var coinJson) =>
-        new CoinListItem(
-            new Coin.fromJson(coinJson)
-        )
-    ).toList();
-  }
-
   @override
   Widget build(BuildContext context) {
-    var apiChildren = _makeChildren();
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-
     return new Scaffold(
       appBar: new AppBar(
         // Here we take the value from the MyHomePage object that was created by
@@ -110,21 +92,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
       ),
       body: new Builder(
-//        todo : extract a widget instead of this
           builder: (BuildContext context) {
-            snackContext = context;
-            return new Center(
-              child:
-              new ListView.builder
-                (
-                padding: const EdgeInsets.all(15.0),
-                itemBuilder: (context, i) {
-                  if (i.isOdd)
-                    return new Divider();
-                  else
-                    return apiChildren[i ~/ 2];
-                },
-              ),
+            scaffoldContext = context;
+            return new CoinList(
+                coinJsonData: apiData
             );
           }),
       floatingActionButton: new FloatingActionButton(
@@ -133,6 +104,35 @@ class _MyHomePageState extends State<MyHomePage> {
         child: new Icon(Icons.update),
         backgroundColor: Colors.red[400],
       ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+}
+
+class CoinList extends StatelessWidget {
+  final List coinJsonData;
+
+  CoinList({@required this.coinJsonData});
+
+  Widget _rowBuilder(Map<String, dynamic> coinJson) {
+    return new CoinListItem(
+        new Coin.fromJson(coinJson)
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return new Center(
+      child:
+      new ListView.builder
+        (
+        padding: const EdgeInsets.all(15.0),
+        itemBuilder: (context, i) {
+          if (i.isOdd)
+            return new Divider();
+          else
+            return _rowBuilder(this.coinJsonData[i ~/ 2]);
+        },
+      ),
     );
   }
 }

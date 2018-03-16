@@ -48,7 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
   // todo: recurring
 
   _getPricesFromApi() async {
-    var url = 'https://api.coinmarketcap.com/v1/ticker/?limit=12';
+    var url = 'https://api.coinmarketcap.com/v1/ticker/?limit=15';
 //    url = 'https://api.myjson.com/bins/13mpv9';
     var httpClient = new HttpClient();
 

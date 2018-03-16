@@ -41,8 +41,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List apiData;
-  BuildContext scaffoldContext;
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  List _apiData;
 
   // todo: recurring
 
@@ -62,7 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
         newApiData = JSON.decode(json);
       }
     } catch (exception) {
-      Scaffold.of(scaffoldContext).showSnackBar(
+      _scaffoldKey.currentState.showSnackBar(
           new SnackBar(content:
           new Text('Network Error! Check your network connection.'))
       );
@@ -76,7 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
     if (!mounted) return;
 
     setState(() {
-      this.apiData = newApiData;
+      this._apiData = newApiData;
     });
   }
 
@@ -84,25 +84,22 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
 //    get prices for the first time
-    _getPricesFromApi();
+//    _getPricesFromApi();
   }
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      key: _scaffoldKey,
       appBar: new AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: new Text(widget.title),
 
       ),
-      body: new Builder(
-          builder: (BuildContext context) {
-            scaffoldContext = context;
-            return new CoinList(
-                coinJsonData: apiData
-            );
-          }),
+      body: new CoinList(
+          coinJsonData: _apiData
+      ),
       floatingActionButton: new FloatingActionButton(
         onPressed: _getPricesFromApi,
         tooltip: 'Get Price',

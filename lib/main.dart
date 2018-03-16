@@ -81,6 +81,12 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  @override
+  void initState() {
+    super.initState();
+//    get prices for the first time
+    _getPricesFromApi();
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:crypto_display/screens/coinList.dart';
+import 'package:crypto_display/loading.dart';
 
 void main() => runApp(new MyApp());
 
@@ -42,7 +43,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  List _apiData;
+  List _apiData = new List();
+  bool _loading = false;
 
   // todo: recurring
 
@@ -54,6 +56,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
     List newApiData;
     try {
+      setState(() => _loading = true);
+
       var request = await httpClient.getUrl(Uri.parse(url));
       var response = await request.close();
       print("called api...");
@@ -62,6 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
         newApiData = JSON.decode(json);
       }
     } catch (exception) {
+      setState(() => _loading = false);
       _scaffoldKey.currentState.showSnackBar(
           new SnackBar(content:
           new Text('Network Error! Check your network connection.'))
@@ -76,6 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
     if (!mounted) return;
 
     setState(() {
+      _loading = false;
       this._apiData = newApiData;
     });
   }
@@ -97,7 +103,8 @@ class _MyHomePageState extends State<MyHomePage> {
         title: new Text(widget.title),
 
       ),
-      body: new CoinList(
+      body: this._loading ? new Loading() :
+      new CoinList(
           coinJsonData: _apiData
       ),
       floatingActionButton: new FloatingActionButton(

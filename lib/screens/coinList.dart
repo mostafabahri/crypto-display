@@ -8,30 +8,41 @@ class CoinList extends StatelessWidget {
 
   CoinList({@required this.coinJsonData});
 
-  Widget _rowBuilder(Map<String, dynamic> coinJson) {
+
+  @override
+  Widget build(BuildContext context) {
+    return new Center(
+        child: coinJsonData.length > 0 ?
+        new ListView(
+          children: _listChildren(),
+        )
+            : new ListView()
+    );
+  }
+
+  List<Widget> _listChildren() {
+    List<Widget> children = new List<Widget>();
+    for (int i = 0; i < 2 * coinJsonData.length - 1; i++) {
+      children.add(_baseRowBuilder(i));
+    }
+    return children;
+  }
+
+  Widget _baseRowBuilder(int i) {
+    if (i.isOdd)
+      return new Divider();
+    else
+      return _coinRowBuilder(this.coinJsonData[i ~/ 2]);
+  }
+
+
+  Widget _coinRowBuilder(Map<String, dynamic> coinJson) {
     return new CoinListItem(
         new Coin.fromJson(coinJson)
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return new Center(
-      child:
-      new ListView.builder
-        (
-        padding: const EdgeInsets.all(15.0),
-        itemBuilder: (context, i) {
-          if (i.isOdd)
-            return new Divider();
-          else
-            return _rowBuilder(this.coinJsonData[i ~/ 2]);
-        },
-      ),
-    );
-  }
 }
-
 
 class CoinListItem extends StatelessWidget {
   final Coin coin;

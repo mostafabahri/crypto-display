@@ -33,12 +33,15 @@ class CoinItemDetail extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        new Container(
-                          child:
-                          new Text("\$${coin.priceUsd}",
-                            style: new TextStyle(
-                              fontSize: 25.0,
-                              fontWeight: FontWeight.w600,
+                        new Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: new Container(
+                            child:
+                            new Text("\$${coin.priceUsd}",
+                              style: new TextStyle(
+                                fontSize: 25.0,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ),
                         )

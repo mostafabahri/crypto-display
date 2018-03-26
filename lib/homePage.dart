@@ -2,8 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-
-import 'package:crypto_display/screens/coinList.dart';
+import 'package:crypto_display/screens/homePageContent.dart';
 import 'package:crypto_display/loading.dart';
 
 class HomePage extends StatefulWidget {
@@ -26,7 +25,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  List _apiData = new List();
+  List<Map<String, dynamic>> _apiData = new List<Map<String, dynamic>>();
   bool _loading = false;
 
   // todo: recurring
@@ -73,7 +72,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 //    get prices for the first time
-//    _getPricesFromApi();
   }
 
   @override
@@ -87,8 +85,8 @@ class _HomePageState extends State<HomePage> {
 
       ),
       body: this._loading ? new Loading() :
-      new CoinList(
-          coinJsonData: _apiData
+      new HomePageContent(
+          coinApiData: _apiData
       ),
       floatingActionButton: new FloatingActionButton(
         onPressed: _getPricesFromApi,

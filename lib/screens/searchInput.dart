@@ -13,12 +13,19 @@ class SearchInput extends StatelessWidget {
       child: new Row(
         children: [
           new Padding(
-            padding: const EdgeInsets.only(left: 12.0, right: 10.0),
+            padding: const EdgeInsets.only(left: 10.0, right: 10.0,top: 5.0),
             child: new Icon(Icons.search),
           ),
           new Expanded(
-            child: new TextField(
-              onChanged: this.onChanged,
+            child: new Padding(//todo : better alignment
+              padding: const EdgeInsets.only(left: 18.0),
+              child: new TextField(
+                decoration: new InputDecoration(
+                  hintText: 'Search name or symbol...',
+                  border: InputBorder.none
+                ),
+                onChanged: this.onChanged,
+              ),
             ),
           )
         ],

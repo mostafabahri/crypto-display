@@ -1,6 +1,6 @@
 import 'package:crypto_display/coin.dart';
 import 'package:crypto_display/screens/coinList.dart';
-
+import 'package:crypto_display/screens/searchInput.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
@@ -15,42 +15,50 @@ class HomePageContent extends StatefulWidget {
 }
 
 class _HomePageContentState extends State<HomePageContent> {
-//  String _searchText;
   List<Coin> _coinListData;
+  List<Coin> _displayCoinList;
 
   @override
   void initState() {
     super.initState();
     print(widget.coinApiData);
+
     _coinListData = widget.coinApiData.map(
             (coinJson) => new Coin.fromJson(coinJson)).toList();
+
+    _displayCoinList = new List<Coin>.from(_coinListData);
   }
 
-//  void _onSearchInputChanged(String text) {
-//    String trimmedText = text.trim();
-//    if (trimmedText == "") {
-//
-//    } else {
-//      setState(() {
-//
-//      });
-//    };
-//  }
+  void onSearchInputChanged(String text) {
+    String searchText = text.trim().toLowerCase();
+    if (searchText == "") {
+      setState(() {
+        _displayCoinList = new List<Coin>.from(_coinListData);
+      });
+    } else {
+      setState(() {
+        _displayCoinList = _coinListData.where((Coin coin) {
+          return coin.name.toLowerCase().contains(searchText) ||
+              coin.symbol.toLowerCase().contains(searchText);
+        }).toList();
+      });
+    };
+  }
 
   @override
   Widget build(BuildContext context) {
-        return new Center(
-          child: new Column(
-            children: <Widget>[
-              new Placeholder(
-                fallbackHeight: 50.0,
-              ),
-              new CoinList(
-                coinListData: this._coinListData,
-              ),
-            ],
+    return new Center(
+      child: new Column(
+        children: <Widget>[
+          new SearchInput(
+              onChanged:
+          onSearchInputChanged),
+          new CoinList(
+            coinListData: this._displayCoinList,
           ),
-        );
+        ],
+      ),
+    );
   }
 }
 

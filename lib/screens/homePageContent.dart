@@ -26,23 +26,28 @@ class _HomePageContentState extends State<HomePageContent> {
     _coinListData = widget.coinApiData.map(
             (coinJson) => new Coin.fromJson(coinJson)).toList();
 
-    _displayCoinList = new List<Coin>.from(_coinListData);
+    _displayCoinList = _coinListData;
   }
 
   void onSearchInputChanged(String text) {
     String searchText = text.trim().toLowerCase();
+
     if (searchText == "") {
       setState(() {
-        _displayCoinList = new List<Coin>.from(_coinListData);
+        _displayCoinList = _coinListData;
       });
     } else {
       setState(() {
         _displayCoinList = _coinListData.where((Coin coin) {
-          return coin.name.toLowerCase().contains(searchText) ||
-              coin.symbol.toLowerCase().contains(searchText);
+          return _searchFilter(coin, searchText);
         }).toList();
       });
     };
+  }
+
+  bool _searchFilter(Coin coin, String searchText) {
+    return coin.name.toLowerCase().contains(searchText) ||
+        coin.symbol.toLowerCase().contains(searchText);
   }
 
   @override
@@ -52,7 +57,7 @@ class _HomePageContentState extends State<HomePageContent> {
         children: <Widget>[
           new SearchInput(
               onChanged:
-          onSearchInputChanged),
+              onSearchInputChanged),
           new CoinList(
             coinListData: this._displayCoinList,
           ),

@@ -1,8 +1,10 @@
 <br/>
 <img src="https://flutter.io/images/flutter-mark-square-100.png" width="80">
 <br/>
-
-# CryptoDisplay
+ 
+Crypto Display
+====
+[![Build Status](https://travis-ci.org/mostafabahri/crypto_display.svg?branch=master)](https://travis-ci.org/mostafabahri/crypto_display)
 
 Flutter seems pretty promising and cryptos are fun; so why not merge the two?
 
@@ -19,9 +21,8 @@ It's still very much a **work in progress**. Bugs everywhere, handle with care!
 ##### Todo :
 - [ ] Improved UI for details including charts and stuff
 - [ ] Automatic update of prices every n minutes
-- [ ] better routing management
+- [ ] Better routing management
 
 ## Flutter Setup
 To install Flutter, follow the steps [here](https://flutter.io/setup/).
-
 

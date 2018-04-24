@@ -43,7 +43,7 @@ class CoinListItem extends StatelessWidget {
         trailing: coin.change1Hour >= 0
             ? _upGreenIcon()
             : _downRedIcon(),
-        subtitle: new Text("\$${coin.priceUsd}"),
+        subtitle: new Text("\$${coin.priceUSD}"),
         onTap: () => _onTap(context),
       );
   }

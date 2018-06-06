@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage> {
 
   _getPricesFromApi() async {
     var url = 'https://api.coinmarketcap.com/v1/ticker/?limit=15';
-//    url = 'https://api.myjson.com/bins/13mpv9';
+  //    url = 'https://api.myjson.com/bins/13mpv9';
     var httpClient = new HttpClient();
 
 
@@ -44,10 +44,11 @@ class _HomePageState extends State<HomePage> {
       var response = await request.close();
       print("called api...");
       if (response.statusCode == HttpStatus.OK) {
-        var json = await response.transform(UTF8.decoder).join();
-        newApiData = JSON.decode(json);
+        var json = await response.transform(utf8.decoder).join();
+        newApiData = jsonDecode(json).cast<Map<String, dynamic>>();
       }
     } catch (exception) {
+      print("api failed: $exception");
       setState(() => _loading = false);
       _scaffoldKey.currentState.showSnackBar(
           new SnackBar(content:
@@ -71,7 +72,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-//    get prices for the first time
+    this._getPricesFromApi();
   }
 
   @override

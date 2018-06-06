@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:crypto_display/coin.dart';
+import 'package:crypto_display/models/coin.dart';
 import 'package:crypto_display/screens/coinListItem.dart';
 import 'package:flutter/foundation.dart';
 
@@ -13,10 +13,10 @@ class CoinList extends StatelessWidget {
   Widget build(BuildContext context) {
     return new Expanded(
       child: coinListData.length > 0 ?
-        new ListView(
-          children: _listChildren(),
-        )
-            : new ListView(),
+      new ListView(
+        children: _listChildren(),
+      )
+          : new ListView(),
     );
   }
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:crypto_display/coin.dart';
+import 'package:crypto_display/models/coin.dart';
 import 'package:crypto_display/screens/coinDetail.dart';
 
 class CoinListItem extends StatelessWidget {

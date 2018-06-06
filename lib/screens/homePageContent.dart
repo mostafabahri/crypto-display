@@ -1,4 +1,4 @@
-import 'package:crypto_display/coin.dart';
+import 'package:crypto_display/models/coin.dart';
 import 'package:crypto_display/screens/coinList.dart';
 import 'package:crypto_display/screens/searchInput.dart';
 import 'package:flutter/material.dart';

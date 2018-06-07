@@ -8,7 +8,7 @@ Crypto Display
 
 Flutter seems pretty promising and cryptos are fun; so why not merge the two?
 
-It's still very much a **work in progress**. Bugs everywhere, handle with care!
+NOTE: This is a **work in progress**.
 
 
 ## Features
@@ -17,9 +17,10 @@ It's still very much a **work in progress**. Bugs everywhere, handle with care!
 + Basic detail rending of the coins on a separate Router
 + Crude search feature among the coin names and symbols, etc
 + Android Snackbar for displaying network errors
++ Basic Flutter widget testing
 
 ##### Todo :
-- [ ] Improved UI for details including charts and stuff
+- [ ] Improved UI for details including charts and responsive sizing
 - [ ] Automatic update of prices every n minutes
 - [ ] Better routing management
 

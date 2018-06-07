@@ -165,33 +165,36 @@ class CoinItemDetail extends StatelessWidget {
                   new Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[
-                      new Text(
-                        '${coin.change1Hour}%',
-                        style: secondaryTextStyle,
-                      ),
-                      new Text(
-                        '${coin.change24Hour}%',
-                        style: secondaryTextStyle,
-                      ),
-                      new Text(
-                        '${coin.change7Days}%',
-                        style: secondaryTextStyle,
-                      ),
+                      new Text('${coin.change1Hour}%',
+                          style: secondaryTextStyle.merge(new TextStyle(
+                              color: coin.change1Hour >= 0
+                                  ? Colors.green
+                                  : Colors.red))),
+                      new Text('${coin.change24Hour}%',
+                          style: secondaryTextStyle.merge(new TextStyle(
+                              color: coin.change24Hour >= 0
+                                  ? Colors.green
+                                  : Colors.red))),
+                      new Text('${coin.change7Days}%',
+                          style: secondaryTextStyle.merge(new TextStyle(
+                              color: coin.change7Days >= 0
+                                  ? Colors.green
+                                  : Colors.red))),
                     ],
                   ),
-                  new Column(
-                    children: <Widget>[
-                      new Icon(coin.change1Hour >= 0
-                          ? Icons.arrow_upward
-                          : Icons.arrow_downward),
-                      new Icon(coin.change24Hour >= 0
-                          ? Icons.arrow_upward
-                          : Icons.arrow_downward),
-                      new Icon(coin.change7Days >= 0
-                          ? Icons.arrow_upward
-                          : Icons.arrow_downward)
-                    ],
-                  )
+                  // new Column(
+                  //   children: <Widget>[
+                  //     new Icon(coin.change1Hour >= 0
+                  //         ? Icons.arrow_upward
+                  //         : Icons.arrow_downward),
+                  //     new Icon(coin.change24Hour >= 0
+                  //         ? Icons.arrow_upward
+                  //         : Icons.arrow_downward),
+                  //     new Icon(coin.change7Days >= 0
+                  //         ? Icons.arrow_upward
+                  //         : Icons.arrow_downward)
+                  //   ],
+                  // )
                 ],
               ),
               new Column(

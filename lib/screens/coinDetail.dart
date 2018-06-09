@@ -28,17 +28,17 @@ class CoinItemDetail extends StatelessWidget {
     // Color primaryColor = Colors.grey[800];
     // Color secondaryColor = Colors.black26;
 
-    TextStyle primaryTextStyle = textTheme.display1;
+    TextStyle primaryTextStyle = textTheme.title;
 
-    TextStyle secondaryTextStyle = textTheme.headline;
+    TextStyle secondaryTextStyle = textTheme.body1;
 
     Widget chartsSection() {
       return new Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           new Container(
-            height: 150.0,
-            width: 300.0,
+            width: MediaQuery.of(context).size.width * 0.80,
+            // height: MediaQuery.of(context).size.width * 0.4,
             child: new SimpleTimeSeriesChart.withSampleData(),
           )
         ],
@@ -70,20 +70,23 @@ class CoinItemDetail extends StatelessWidget {
       return new Row(
         // cap, volume
         mainAxisAlignment: MainAxisAlignment.spaceAround,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          new Column(
+          // todo : center vertically
+          new Flexible(
+              child: new Column(
             children: marketCapWidgets,
-          ),
-          new Column(children: volume),
+          )),
+          new Flexible(
+            child: new Column(children: volume),
+          )
         ],
       );
     }
 
     Widget generalInfoSection() {
-      return new Row(
+      return new Center(
+          child: new Row(
         // rank, name, price
-        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           new Expanded(
             flex: 1,
@@ -92,7 +95,7 @@ class CoinItemDetail extends StatelessWidget {
                 children: <Widget>[
                   new Text(
                     'Ranked ${_rankText(coin.rank)}',
-                    style: textTheme.display1
+                    style: textTheme.headline
                         .merge(new TextStyle(color: Colors.blueGrey)),
                   ),
                 ],
@@ -100,50 +103,54 @@ class CoinItemDetail extends StatelessWidget {
               new Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  new Padding(
-                    padding: const EdgeInsets.only(left: 10.0),
-                    child: new Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      // name, symbol
-                      children: <Widget>[
-                        new Text(
-                          '${coin.name}',
-                          style: primaryTextStyle,
+                  new Expanded(
+                      flex: 3,
+                      child: new Padding(
+                        padding: const EdgeInsets.only(left: 10.0),
+                        child: new Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          // name, symbol
+                          children: <Widget>[
+                            new Text(
+                              '${coin.name}',
+                              style: primaryTextStyle,
+                            ),
+                            new Text(
+                              '${coin.symbol}',
+                              style: secondaryTextStyle,
+                            )
+                          ],
                         ),
-                        new Text(
-                          '${coin.symbol}',
-                          style: secondaryTextStyle,
-                        )
-                      ],
-                    ),
-                  ),
+                      )),
                   new Container(
-                    width: 10.0,
+                    width: MediaQuery.of(context).size.width * 0.05,
                     height: 40.0,
                     decoration: new BoxDecoration(
                         border: new Border(
                             left: new BorderSide(
                                 color: Colors.black38, width: 2.0))),
                   ),
-                  new Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      new Text(
-                        '${coin.priceUSD} USD',
-                        style: primaryTextStyle,
-                      ),
-                      new Text(
-                        '${coin.priceBTC} BTC',
-                        style: secondaryTextStyle,
-                      )
-                    ],
-                  ) // usd and btc price
+                  new Flexible(
+                      flex: 2,
+                      child: new Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          new Text(
+                            '${coin.priceUSD} USD',
+                            style: primaryTextStyle,
+                          ),
+                          new Text(
+                            '${coin.priceBTC} BTC',
+                            style: secondaryTextStyle,
+                          )
+                        ],
+                      )) // usd and btc price
                 ],
               ),
             ]),
           ),
         ],
-      );
+      ));
     }
 
     Widget changeSupplySection() {
@@ -189,16 +196,19 @@ class CoinItemDetail extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            new Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+            new Flexible(
+                child: new Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 new Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: priceChangeWidgets,
                 ),
               ],
-            ),
-            new Column(
+            )),
+            new Flexible(
+                child: new Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 new Column(
                   children: <Widget>[
@@ -225,7 +235,7 @@ class CoinItemDetail extends StatelessWidget {
                   ],
                 ) // total supply
               ],
-            ),
+            )),
           ]);
     }
 
@@ -234,13 +244,20 @@ class CoinItemDetail extends StatelessWidget {
       child: new Container(
           child: new Column(// top level column
               children: [
-        generalInfoSection(),
+        new Flexible(flex: 4, child: new Center(child: generalInfoSection())),
         _sectionDivider(),
-        capVolumeSection(),
+        new Flexible(flex: 2, child: capVolumeSection()),
         _sectionDivider(),
-        changeSupplySection(),
+        new Flexible(
+          flex: 3,
+          child: changeSupplySection(),
+        ),
         _sectionDivider(),
-        chartsSection(),
+        new Flexible(
+          flex: 5,
+          fit: FlexFit.tight,
+          child: chartsSection(),
+        )
       ])),
     );
   }

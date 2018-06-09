@@ -239,8 +239,10 @@ class CoinItemDetail extends StatelessWidget {
           ]);
     }
 
+    var mq = MediaQuery.of(context).size;
     return new Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20.0),
+      padding: EdgeInsets.symmetric(
+          horizontal: mq.width * .055, vertical: mq.height * 0.04),
       child: new Container(
           child: new Column(// top level column
               children: [
